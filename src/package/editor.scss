@@ -1,0 +1,88 @@
+//主界面
+.editor{
+  width: 100%;
+  height: 100%;
+  &-left,&-right{
+    position: absolute;
+    width: 270px;
+    background: red;
+    top: 0;
+    bottom: 0;
+  }
+  //左侧物料区
+  &-left{
+    left: 0;
+    //物料区中的预览组件
+    &-item{
+      position: relative;
+      width: 250px;
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      background: white ;
+      padding: 20px;
+      box-sizing: border-box;
+      cursor: move;
+      user-select: none;
+      min-height: 100px;
+      //预览组件的label
+      >span{
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: aqua;
+        color: white;
+        padding: 4px;
+      }
+      //预览组件的显示位置
+      >div{
+        top: 0;
+        bottom: 0;
+        margin: auto;
+      }
+      //利用伪元素禁止组件的交互(在组件上加上一层透明的幕布)
+      &::after{
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #ccc;
+        opacity: 0.1;
+      }
+    }
+  }
+  //右侧属性控制栏目
+  &-right{
+    right: 0;
+  }
+  //上方菜单栏
+  &-top{
+    position: absolute;
+    right: 280px;
+    left: 280px;
+    height: 80px;
+    background: red;
+  }
+  //编辑区域
+  &-container{
+    padding: 80px 270px 0;
+    height: 100%;
+    box-sizing: border-box;
+    //组件放置区
+    &-canvas{
+      overflow: scroll;
+      height: 100%;
+      &-content{
+        margin: 20px auto;
+        background: yellow;
+        position: relative;
+      }
+    }
+  }
+}
+.editor-block{
+  position: absolute;
+}
