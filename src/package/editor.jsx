@@ -1,6 +1,13 @@
 import {computed, defineComponent, inject, ref} from "vue";
 import './editor.scss'
 import EditorBlock from './editor-block'
+//物料区拖拽功能的实现
+import {drag} from "@/js/drag";
+//多选功能的实现
+import {focus} from "@/js/focus";
+//画布上的组件拖拽功能的实现
+import {canvasDrag} from "@/js/canvasDrag";
+
 export default defineComponent({
     props:{
         modelValue:{type:Object}
@@ -25,43 +32,14 @@ export default defineComponent({
         //接收依赖注入的变量
         const config = inject("config")
         const containerRef = ref(null)
-        let currentComponent = null
-        //设置拖拽事件
-        const dragenter = (e)=>{
-            e.dataTransfer.dropEffect = 'move'
-        }
-        const dragover = (e)=>{
-            e.preventDefault()
-        }
-        const dragleave = (e)=>{
-            e.dataTransfer.dropEffect = 'none'
-        }
-        const drop = (e)=>{
-            let blocks = data.value.blocks
-            //记录拖拽后的坐标
-            data.value = {...data.value,blocks:[
-                    ...blocks,
-                    {
-                        top:e.offsetY,
-                        left:e.offsetX,
-                        zIndex:1,
-                        key:currentComponent.key,
-                        alignCenter:true//居中标识
-                    }
-                ]
-
-            }
-            currentComponent = null
-        }
-        const dragstart = (e,component)=>{
-            //监听事件
-            containerRef.value.addEventListener('dragenter',dragenter)
-            containerRef.value.addEventListener('dragover',dragover)
-            containerRef.value.addEventListener('dragleave',dragleave)
-            containerRef.value.addEventListener('drop',drop)
-            //获取对应的组件
-            currentComponent = component
-        }
+        //物料区拖拽功能函数
+        const {dragstart,dragend} = drag(containerRef,data)
+        //画布多选功能函数
+        const {blockMouseDown, containerMouseDown,focusData} = focus(data,(e)=>{
+            mousedown(e)
+        })
+        //画布组件多选拖拽功能
+        const {mousedown} = canvasDrag(focusData)
         return ()=> <div class="editor">
             <div class="editor-left">
                 {/*将componentList中的组件渲染至左侧物料区*/}
@@ -70,6 +48,7 @@ export default defineComponent({
                         class="editor-left-item"
                         draggable
                         onDragstart={e => dragstart(e,component)}
+                        onDragend={dragend}
                     >
                         <span>{component.label}</span>
                         <div>{component.preview()}</div>
@@ -81,11 +60,19 @@ export default defineComponent({
             <div class="editor-container">
                 {/*滚动条*/}
                 <div class="editor-container-canvas">
-                    <div class="editor-container-canvas-content" style={containerStyle.value} ref={containerRef}>
+                    <div class="editor-container-canvas-content"
+                         style={containerStyle.value}
+                         ref={containerRef}
+                         onMousedown={(e)=>containerMouseDown()}
+                    >
                         {/*将组件渲染至画布上*/}
                         {
                             (data.value.blocks.map(block=>(
-                                <EditorBlock block={block}></EditorBlock>
+                                <EditorBlock
+                                    class={block.focus ? 'editor-block-focus':''}
+                                    block={block}
+                                    onMousedown={(e)=>blockMouseDown(e,block)}
+                                ></EditorBlock>
                                 )))
                         }
                     </div>
