@@ -45,7 +45,8 @@ export default defineComponent({
                         top:e.offsetY,
                         left:e.offsetX,
                         zIndex:1,
-                        key:currentComponent.key
+                        key:currentComponent.key,
+                        alignCenter:true//居中标识
                     }
                 ]
 
