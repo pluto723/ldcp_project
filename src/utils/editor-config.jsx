@@ -25,13 +25,13 @@ registerConfig.register({
 })
 registerConfig.register({
     label:'按钮',
-    preview:()=><ElButton>预览按钮</ElButton>,
+    preview:()=><ElButton disabled>预览按钮</ElButton>,
     render:()=><ElButton>渲染按钮</ElButton>,
     key:'button'
 })
 registerConfig.register({
     label:'输入框',
-    preview:()=><ElInput>预览输入框</ElInput>,
+    preview:()=><ElInput disabled>预览输入框</ElInput>,
     render:()=><ElInput>渲染输入框</ElInput>,
     key:'input'
 })

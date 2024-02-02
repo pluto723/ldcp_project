@@ -41,17 +41,6 @@
         bottom: 0;
         margin: auto;
       }
-      //利用伪元素禁止组件的交互(在组件上加上一层透明的幕布)
-      &::after{
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: #ccc;
-        opacity: 0.1;
-      }
     }
   }
   //右侧属性控制栏目
