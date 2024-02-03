@@ -23,6 +23,8 @@ export default defineComponent({
                 props.block.top = props.block.top - offsetHeight/2
                 props.block.alignCenter = false
             }
+            props.block.height = offsetHeight
+            props.block.width = offsetWidth
         })
         //哈希表通过key找到对应的组件
         const component = config.componentMap[props.block.key]

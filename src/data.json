@@ -1,7 +1,7 @@
 {
   "container": {
-    "width": "550px",
-    "height": "550px"
+    "width": 550,
+    "height": 550
   },
   "blocks": [
     {"top": 100,"left": 100,"zIndex": 1,"key": "text"},

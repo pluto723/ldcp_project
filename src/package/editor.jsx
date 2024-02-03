@@ -26,8 +26,8 @@ export default defineComponent({
         })
         //解构json文件中的样式
         const containerStyle = computed(()=>({
-          width:data.value.container.width,
-            height:data.value.container.height,
+          width:data.value.container.width+'px',
+            height:data.value.container.height+'px',
         }))
         //接收依赖注入的变量
         const config = inject("config")
@@ -35,11 +35,11 @@ export default defineComponent({
         //物料区拖拽功能函数
         const {dragstart,dragend} = drag(containerRef,data)
         //画布多选功能函数
-        const {blockMouseDown, containerMouseDown,focusData} = focus(data,(e)=>{
+        const {blockMouseDown, containerMouseDown,focusData,selectLastBlock} = focus(data,(e)=>{
             mousedown(e)
         })
         //画布组件多选拖拽功能
-        const {mousedown} = canvasDrag(focusData)
+        const {mousedown,markLine} = canvasDrag(focusData,selectLastBlock,data)
         return ()=> <div class="editor">
             <div class="editor-left">
                 {/*将componentList中的组件渲染至左侧物料区*/}
@@ -67,14 +67,16 @@ export default defineComponent({
                     >
                         {/*将组件渲染至画布上*/}
                         {
-                            (data.value.blocks.map(block=>(
+                            (data.value.blocks.map((block,index)=>(
                                 <EditorBlock
                                     class={block.focus ? 'editor-block-focus':''}
                                     block={block}
-                                    onMousedown={(e)=>blockMouseDown(e,block)}
+                                    onMousedown={(e)=>blockMouseDown(e,block,index)}
                                 ></EditorBlock>
                                 )))
                         }
+                        {markLine.x !==null && <div class="line-x" style={{left:markLine.x + 'px'}}></div>}
+                        {markLine.y !==null && <div class="line-y" style={{top:markLine.y + 'px'}}></div>}
                     </div>
                 </div>
             </div>
