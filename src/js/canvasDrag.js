@@ -1,23 +1,18 @@
 //封装画布上的组件拖拽功能
 import {reactive} from "vue";
-
+import {events} from "./mitt";
 export function canvasDrag(focusData, selectLastBlock,data){
     //对画布上选中的元素进行拖动
     let dragState = {
         startX:0,
-        StartY:0
+        StartY:0,
+        //拖拽标识
+        dragging:false
     }
     let markLine = reactive({
         x:null,
         y:null
     })
-    const mouseup = (e) => {
-        //解绑事件
-        document.removeEventListener('mousemove',mousemove)
-        document.removeEventListener('mouseup',mouseup)
-        markLine.x = null
-        markLine.y = null
-    }
     const mousedown = (e)=>{
         const {height:Bheight,width:Bwidth} = selectLastBlock.value
         dragState = {
@@ -26,6 +21,7 @@ export function canvasDrag(focusData, selectLastBlock,data){
             //拖拽前的位置
             startLeft:selectLastBlock.value.left,
             startTop:selectLastBlock.value.top,
+            dragging: false,
             //记录每个被选中的组件的位置
             startPos:focusData.value.focus.map(({top,left})=>({top,left})),
             //辅助线
@@ -84,7 +80,6 @@ export function canvasDrag(focusData, selectLastBlock,data){
             if(Math.abs(t - top) < 5){
                 //辅助线显示的位置
                 y = s
-                console.log(y)
                 //实现组件之间的快速对齐
                 moveY = dragState.startY - dragState.startTop + t
                 //只需找到一根辅助线就跳出循环
@@ -112,6 +107,21 @@ export function canvasDrag(focusData, selectLastBlock,data){
             block.top = dragState.startPos[idx].top + durY
             block.left = dragState.startPos[idx].left + durX
         })
+        if (!dragState.dragging){
+            dragState.dragging = true
+            //触发拖拽开始事件
+            events.emit('start')
+        }
+    }
+    const mouseup = (e) => {
+        //解绑事件
+        document.removeEventListener('mousemove',mousemove)
+        document.removeEventListener('mouseup',mouseup)
+        markLine.x = null
+        markLine.y = null
+        if(dragState.dragging){
+            events.emit('end')
+        }
     }
     return{
         mousedown,

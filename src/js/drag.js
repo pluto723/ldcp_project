@@ -1,3 +1,4 @@
+import {events} from './mitt'
 //封装拖拽事件
 export function drag(containerRef,data){
     let currentComponent = null
@@ -36,6 +37,8 @@ export function drag(containerRef,data){
         containerRef.value.addEventListener('drop',drop)
         //获取对应的组件
         currentComponent = component
+        //发布start事件
+        events.emit('start')
     }
     const dragend = (e,component)=>{
         //解绑事件
@@ -43,6 +46,8 @@ export function drag(containerRef,data){
         containerRef.value.removeEventListener('dragover',dragover)
         containerRef.value.removeEventListener('dragleave',dragleave)
         containerRef.value.removeEventListener('drop',drop)
+        //发布end事件
+        events.emit('end')
     }
     return{
         dragstart,

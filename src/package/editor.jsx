@@ -7,7 +7,9 @@ import {drag} from "@/js/drag";
 import {focus} from "@/js/focus";
 //画布上的组件拖拽功能的实现
 import {canvasDrag} from "@/js/canvasDrag";
-
+import {ElButton} from "element-plus";
+//引入撤销、重做功能
+import {btnCommand} from "@/js/btnCommand";
 export default defineComponent({
     props:{
         modelValue:{type:Object}
@@ -40,6 +42,13 @@ export default defineComponent({
         })
         //画布组件多选拖拽功能
         const {mousedown,markLine} = canvasDrag(focusData,selectLastBlock,data)
+        //按钮撤销、重做功能
+        const {state} = btnCommand(data)
+        //按钮组件
+        const buttons = [
+            {label:'撤销',handler:()=>state.commands.undo()},
+            {label:'重做',handler:()=>state.commands.redo()},
+        ]
         return ()=> <div class="editor">
             <div class="editor-left">
                 {/*将componentList中的组件渲染至左侧物料区*/}
@@ -55,7 +64,11 @@ export default defineComponent({
                     </div>
                 ))}
             </div>
-            <div class="editor-top">菜单栏</div>
+            <div class="editor-top">
+                {buttons.map((btn)=>{
+                    return <ElButton class="editor-top-button" onClick={btn.handler}>{btn.label}</ElButton>
+                })}
+            </div>
             <div class="editor-right">属性控制栏目</div>
             <div class="editor-container">
                 {/*滚动条*/}

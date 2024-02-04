@@ -53,7 +53,12 @@
     right: 280px;
     left: 280px;
     height: 80px;
-    background: red;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    &-button{
+      flex: 1;
+    }
   }
   //编辑区域
   &-container{
