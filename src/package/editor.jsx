@@ -10,6 +10,7 @@ import {canvasDrag} from "@/js/canvasDrag";
 import {ElButton} from "element-plus";
 //引入撤销、重做功能
 import {btnCommand} from "@/js/btnCommand";
+import {$dialog} from "@/package/dialog";
 export default defineComponent({
     props:{
         modelValue:{type:Object}
@@ -48,6 +49,23 @@ export default defineComponent({
         const buttons = [
             {label:'撤销',handler:()=>state.commands.undo()},
             {label:'重做',handler:()=>state.commands.redo()},
+            {label:'导出',handler:()=>{
+                $dialog({
+                    title:'导出Json使用',
+                    content:JSON.stringify(data.value),
+                })
+                }},
+            {label:'导入',handler:()=>{
+                    $dialog({
+                        title:'导入Json使用',
+                        content:'',
+                        //footer控制是否显示确认、取消按钮
+                        footer:true,
+                        onConfirm(text){
+                            data.value = JSON.parse(text)
+                        }
+                    })
+                }},
         ]
         return ()=> <div class="editor">
             <div class="editor-left">
