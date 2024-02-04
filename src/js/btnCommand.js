@@ -29,7 +29,6 @@ export function btnCommand(data){
             //将执行过的命令放入队列中
             queue.push({redo,undo})
             state.current = current + 1
-            console.log(queue)
         }
     }
     //重做函数
@@ -43,8 +42,6 @@ export function btnCommand(data){
                     if (item){
                         item.redo && item.redo()
                         state.current++
-                        console.log('重做')
-                        console.log(data.value.blocks)
                     }
             }}
         }
@@ -62,10 +59,9 @@ export function btnCommand(data){
                     //找到上一步操作
                     let item = state.queue[state.current]
                     if (item){
+                        console.log(item.undo)
                         item.undo && item.undo()
                         state.current--
-                        console.log('撤销')
-                        console.log(data.value.blocks)
                     }
                 }}
         }
@@ -77,10 +73,10 @@ export function btnCommand(data){
             this.before = null
             //监测鼠标拖拽开始前的事件，将dom保存在before中
             const start = ()=>{
-                this.before = data.value.blocks
+                this.before = JSON.parse(JSON.stringify(data.value.blocks)) // 深拷贝以确保不会影响原始数据
             }
             const end = ()=>{
-                state.commands.drag()
+                state.commands.drag && state.commands.drag();
             }
             events.on('start',start)
             events.on('end',end)
