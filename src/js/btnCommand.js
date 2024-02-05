@@ -1,6 +1,6 @@
 import {events} from './mitt'
 import {onUnmounted} from "vue";
-export function btnCommand(data){
+export function btnCommand(data,focusData){
     //前进、后退的状态
     const state = {
         //索引
@@ -90,6 +90,71 @@ export function btnCommand(data){
             let after = data.value.blocks
             //闭包
             return {
+                redo(){
+                    //撤销
+                    data.value = {...data.value,blocks:after}
+                },
+                undo(){
+                    //重做
+                    data.value = {...data.value,blocks:before}
+                }
+            }
+        }
+    });
+    //置顶函数
+    registry({
+        name:'placeTop',
+        pushQueue:true,
+        execute(){
+            let before = JSON.parse(JSON.stringify(data.value.blocks))
+            let after = (()=>{
+                let {focus,unfocused} = focusData.value
+                //遍历找出未选中的组件中最大的zIndex
+                let maxZIndex = unfocused.reduce((prev,block)=>{
+                    return Math.max(prev,block.zIndex)
+                },-Infinity)
+                //使选中的组件的zIndex在最大值的基础上再加一
+                focus.forEach(block=>{
+                    block.zIndex = maxZIndex + 1
+                })
+                return data.value.blocks
+            })()
+            return{
+                redo(){
+                    //撤销
+                    data.value = {...data.value,blocks:after}
+                },
+                undo(){
+                    //重做
+                    data.value = {...data.value,blocks:before}
+                }
+            }
+        }
+    });
+    //置底函数
+    registry({
+        name:'placeBottom',
+        pushQueue:true,
+        execute(){
+            let before = JSON.parse(JSON.stringify(data.value.blocks))
+            let after = (()=>{
+                let {focus,unfocused} = focusData.value
+                //遍历找出未选中的组件中最小的zIndex
+                let minZIndex = unfocused.reduce((prev,block)=>{
+                    return Math.min(prev,block.zIndex)
+                },Infinity)
+                //使选中的组件的zIndex在最小值的基础上再减一
+                if(minZIndex < 0){
+                    const dur = Math.abs(minZIndex)
+                    minZIndex = 0
+                    unfocused.forEach(block => block.zIndex += dur)
+                }
+                focus.forEach(block=>{
+                    block.zIndex = minZIndex
+                })
+                return data.value.blocks
+            })()
+            return{
                 redo(){
                     //撤销
                     data.value = {...data.value,blocks:after}

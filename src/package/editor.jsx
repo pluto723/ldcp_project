@@ -44,7 +44,7 @@ export default defineComponent({
         //画布组件多选拖拽功能
         const {mousedown,markLine} = canvasDrag(focusData,selectLastBlock,data)
         //按钮撤销、重做功能
-        const {state} = btnCommand(data)
+        const {state} = btnCommand(data,focusData)
         //按钮组件
         const buttons = [
             {label:'撤销',handler:()=>state.commands.undo()},
@@ -66,6 +66,8 @@ export default defineComponent({
                         }
                     })
                 }},
+            {label:'置顶',handler:()=>state.commands.placeTop()},
+            {label:'置底',handler:()=>state.commands.placeBottom()},
         ]
         return ()=> <div class="editor">
             <div class="editor-left">
