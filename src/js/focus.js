@@ -1,6 +1,6 @@
 import {computed, ref} from "vue";
 
-export function focus(data,callback){
+export function focus(data,preview,callback){
     //画布上组件选中功能
     //表示最后一个被选中的元素
     const selectIndex = ref(-1)
@@ -10,6 +10,7 @@ export function focus(data,callback){
         })
     }
     const blockMouseDown = (e,block,index)=>{
+        if(preview.value) return
         e.preventDefault()
         e.stopPropagation()
         //当按下shift时实现多选
@@ -37,7 +38,8 @@ export function focus(data,callback){
         data.value.blocks.forEach(block=>{
             if(block.focus){
                 focus.push(block)
-            }else {
+            }
+            if(!block.focus){
                 unfocused.push(block)
             }
         })
@@ -45,6 +47,7 @@ export function focus(data,callback){
     })
     //点击容器时清空所有的焦点
     const containerMouseDown = ()=>{
+        if(preview.value) return
         clearBlockFocus()
         selectIndex.value = -1
     }
@@ -52,6 +55,7 @@ export function focus(data,callback){
         blockMouseDown,
         focusData,
         containerMouseDown,
-        selectLastBlock
+        selectLastBlock,
+        clearBlockFocus
     }
 }

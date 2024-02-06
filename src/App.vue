@@ -7,7 +7,7 @@
 
 <script>
 import data from './data.json'
-import {provide, ref} from "vue";
+import {provide, ref, watch} from "vue";
 //引入虚拟dom json文件
 import Editor from './package/editor'
 import {registerConfig as config} from './utils/editor-config'
@@ -19,6 +19,9 @@ export default {
     //provide依赖注入，该变量可以被所有子组件所共用
     provide('config',config)
     const state = ref(data)
+    // watch(state,(value, oldValue, onCleanup)=>{
+    //   console.log(value)
+    // })
     return {
       state
     }

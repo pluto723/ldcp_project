@@ -17,6 +17,8 @@ export default defineComponent({
     },
     emits:['update:modelValue'],
     setup(props,ctx){
+        //预览模式标识
+        const preview = ref(false)
         //computed解构props
         const data = computed({
             get(){
@@ -38,7 +40,7 @@ export default defineComponent({
         //物料区拖拽功能函数
         const {dragstart,dragend} = drag(containerRef,data)
         //画布多选功能函数
-        const {blockMouseDown, containerMouseDown,focusData,selectLastBlock} = focus(data,(e)=>{
+        const {blockMouseDown, containerMouseDown,focusData,selectLastBlock,clearBlockFocus} = focus(data,preview,(e)=>{
             mousedown(e)
         })
         //画布组件多选拖拽功能
@@ -68,7 +70,17 @@ export default defineComponent({
                 }},
             {label:'置顶',handler:()=>state.commands.placeTop()},
             {label:'置底',handler:()=>state.commands.placeBottom()},
+            {label:'删除',handler:()=>state.commands.delete()},
+            {label:'预览',handler:()=>{
+                preview.value = !preview.value
+                    clearBlockFocus()
+            }},
         ]
+        //组件右键菜单
+        const onContextMenuBlock = (e,block)=>{
+            //关闭默认菜单
+            e.preventDefault()
+        }
         return ()=> <div class="editor">
             <div class="editor-left">
                 {/*将componentList中的组件渲染至左侧物料区*/}
@@ -104,7 +116,10 @@ export default defineComponent({
                                 <EditorBlock
                                     class={block.focus ? 'editor-block-focus':''}
                                     block={block}
-                                    onMousedown={(e)=>blockMouseDown(e,block,index)}
+                                    onMousedown={(e)=>{
+                                        blockMouseDown(e,block,index)
+                                    }}
+                                    onContextmenu={(e)=>{onContextMenuBlock(e,block)}}
                                 ></EditorBlock>
                                 )))
                         }

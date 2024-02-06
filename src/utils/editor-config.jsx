@@ -1,6 +1,6 @@
 //在列表区显示所有的组件
 //虚拟dom的key对应生成相应的组件
-import {ElButton,ElInput} from 'element-plus'
+import {ElButton,ElInput,ElText} from 'element-plus'
 function createEditorConfig(){
     //list用于渲染左边物料区的组件
     const componentList = []
@@ -19,8 +19,8 @@ function createEditorConfig(){
 export let registerConfig = createEditorConfig()
 registerConfig.register({
     label:'文本',
-    preview:()=>'预览文本',
-    render:()=>'渲染文本',
+    preview:()=><ElText>预览文字</ElText>,
+    render:()=><ElText>渲染文字</ElText>,
     key:'text'
 })
 registerConfig.register({

@@ -16,6 +16,7 @@ export function btnCommand(data,focusData){
         state.commandArray.push(command)
         state.commands[command.name] = ()=>{
             const {redo,undo} = command.execute()
+            //执行命令
             redo()
             if (!command.pushQueue){
                 return
@@ -59,7 +60,6 @@ export function btnCommand(data,focusData){
                     //找到上一步操作
                     let item = state.queue[state.current]
                     if (item){
-                        console.log(item.undo)
                         item.undo && item.undo()
                         state.current--
                     }
@@ -91,11 +91,11 @@ export function btnCommand(data,focusData){
             //闭包
             return {
                 redo(){
-                    //撤销
+                    //重做
                     data.value = {...data.value,blocks:after}
                 },
                 undo(){
-                    //重做
+                    //撤销
                     data.value = {...data.value,blocks:before}
                 }
             }
@@ -121,11 +121,11 @@ export function btnCommand(data,focusData){
             })()
             return{
                 redo(){
-                    //撤销
+                    //重做
                     data.value = {...data.value,blocks:after}
                 },
                 undo(){
-                    //重做
+                    //撤销
                     data.value = {...data.value,blocks:before}
                 }
             }
@@ -156,11 +156,30 @@ export function btnCommand(data,focusData){
             })()
             return{
                 redo(){
-                    //撤销
+                    //重做
                     data.value = {...data.value,blocks:after}
                 },
                 undo(){
+                    //撤销
+                    data.value = {...data.value,blocks:before}
+                }
+            }
+        }
+    });
+    //删除函数
+    registry({
+        name:'delete',
+        pushQueue:true,
+        execute(){
+            let before = JSON.parse(JSON.stringify(data.value.blocks))
+            let after = focusData.value.unfocused.filter(val => val.key)
+            return{
+                redo(){
                     //重做
+                    data.value ={...data.value,blocks:after}
+                },
+                undo(){
+                    //撤销
                     data.value = {...data.value,blocks:before}
                 }
             }
