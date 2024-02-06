@@ -11,6 +11,7 @@ import {ElButton} from "element-plus";
 //引入撤销、重做功能
 import {btnCommand} from "@/js/btnCommand";
 import {$dialog} from "@/package/dialog";
+import {$dropdown} from "@/package/dropdown";
 export default defineComponent({
     props:{
         modelValue:{type:Object}
@@ -73,6 +74,7 @@ export default defineComponent({
             {label:'删除',handler:()=>state.commands.delete()},
             {label:'预览',handler:()=>{
                 preview.value = !preview.value
+                    //阻止默认右键菜单生成
                     clearBlockFocus()
             }},
         ]
@@ -80,6 +82,35 @@ export default defineComponent({
         const onContextMenuBlock = (e,block)=>{
             //关闭默认菜单
             e.preventDefault()
+            $dropdown({
+                el:e.target,
+                content:()=>{
+                    return <>
+                        <ElButton onClick={state.commands.delete}>删除</ElButton>
+                        <ElButton onClick={state.commands.placeTop} style="margin-left:0px;">置顶</ElButton>
+                        <ElButton onClick={state.commands.placeBottom} style="margin-left:0px;">置底</ElButton>
+                        <ElButton onClick={()=>{{$dialog(
+                            {title:'导出组件json',
+                                content:JSON.stringify(block),}
+                        )}}} style="margin-left:0px;">导出</ElButton>
+                        <ElButton onClick={()=>{{$dialog(
+                            {title:'导入组件json',
+                                content:'',
+                                //footer控制是否显示确认、取消按钮
+                                footer:true,
+                                onConfirm(text){
+                                    text = JSON.parse(text)
+                                    let blocks = [...data.value.blocks]
+                                    const index = data.value.blocks.indexOf(block)
+                                    if(index > -1){
+                                        blocks.splice(index,1,text)
+                                    }
+                                    data.value = {...data.value,blocks:blocks}
+                                }}
+                        )}}} style="margin-left:0px;">导入</ElButton>
+                    </>
+                }
+            })
         }
         return ()=> <div class="editor">
             <div class="editor-left">

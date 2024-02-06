@@ -1,4 +1,4 @@
-import {computed, defineComponent, inject, onMounted, ref} from "vue";
+import {computed, defineComponent, inject, onMounted, ref, watch} from "vue";
 // 组件用于解析json文件
 export default defineComponent({
     props:{
@@ -26,11 +26,11 @@ export default defineComponent({
             props.block.height = offsetHeight
             props.block.width = offsetWidth
         })
-        //哈希表通过key找到对应的组件
-        const component = config.componentMap[props.block.key]
-        //通过render()函数渲染真实组件
-        const RenderComponent = component.render()
         return()=>{
+            //哈希表通过key找到对应的组件
+            const component = config.componentMap[props.block.key]
+            //通过render()函数渲染真实组件
+            const RenderComponent = component.render()
             return <div class="editor-block" style={blockStyle.value} ref={blockRef}>
                 {RenderComponent}
             </div>

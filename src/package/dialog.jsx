@@ -27,9 +27,9 @@ const DialogComponent = defineComponent({
         }
         return ()=>{
             //插槽
-            return <ElDialog v-model={state.isShow}>
+            return <ElDialog v-model={state.isShow} title={state.option.title}>
                 {{
-                    default:()=><ElInput type="textarea" v-model={state.option.content} rows={10} title={state.option.title}></ElInput>,
+                    default:()=><ElInput type="textarea" v-model={state.option.content} rows={10} ></ElInput>,
                     footer:()=>state.option.footer && <div>
                         <ElButton onclick={cancel}>取消</ElButton>
                         <ElButton onclick={()=>{}} type="primary" onClick={confirm}>确定</ElButton>
