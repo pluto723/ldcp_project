@@ -10,8 +10,12 @@ import {canvasDrag} from "@/js/canvasDrag";
 import {ElButton} from "element-plus";
 //引入撤销、重做功能
 import {btnCommand} from "@/js/btnCommand";
+//导入导出弹出框
 import {$dialog} from "@/package/dialog";
+//组件导入导出弹出框
 import {$dropdown} from "@/package/dropdown";
+//右侧编辑栏菜单
+import EditorOperator from "@/package/editor-operator";
 export default defineComponent({
     props:{
         modelValue:{type:Object}
@@ -132,7 +136,9 @@ export default defineComponent({
                     return <ElButton class="editor-top-button" onClick={btn.handler}>{btn.label}</ElButton>
                 })}
             </div>
-            <div class="editor-right">属性控制栏目</div>
+            <div class="editor-right">
+                <EditorOperator block={selectLastBlock.value} data={data.value}></EditorOperator>
+            </div>
             <div class="editor-container">
                 {/*滚动条*/}
                 <div class="editor-container-canvas">
