@@ -137,7 +137,11 @@ export default defineComponent({
                 })}
             </div>
             <div class="editor-right">
-                <EditorOperator block={selectLastBlock.value} data={data.value}></EditorOperator>
+                <EditorOperator
+                    block={selectLastBlock.value}
+                    data={data.value}
+                    updateContainer={state.commands.updateContainer}
+                ></EditorOperator>
             </div>
             <div class="editor-container">
                 {/*滚动条*/}

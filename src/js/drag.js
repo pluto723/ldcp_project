@@ -22,7 +22,8 @@ export function drag(containerRef,data){
                     left:e.offsetX,
                     zIndex:1,
                     key:currentComponent.key,
-                    alignCenter:true//居中标识
+                    alignCenter:true, //居中标识
+                    props:{}
                 }
             ]
 

@@ -30,7 +30,9 @@ export default defineComponent({
             //哈希表通过key找到对应的组件
             const component = config.componentMap[props.block.key]
             //通过render()函数渲染真实组件
-            const RenderComponent = component.render()
+            const RenderComponent = component.render({
+                props:props.block.props
+            })
             return <div class="editor-block" style={blockStyle.value} ref={blockRef}>
                 {RenderComponent}
             </div>

@@ -185,6 +185,25 @@ export function btnCommand(data,focusData){
             }
         }
     });
+    registry({
+        name:'updateContainer',
+        pushQueue:true,
+        execute(newValue){
+            console.log(newValue)
+            let before = JSON.parse(JSON.stringify(data.value.blocks))
+            let after = newValue
+            return{
+                redo(){
+                    //重做
+                    data.value ={...data.value,blocks:after}
+                },
+                undo(){
+                    //撤销
+                    data.value = {...data.value,blocks:before}
+                }
+            }
+        }
+    });
     //立即执行函数
     (()=>{
         state.commandArray.forEach(command =>{

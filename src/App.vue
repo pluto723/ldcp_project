@@ -19,9 +19,9 @@ export default {
     //provide依赖注入，该变量可以被所有子组件所共用
     provide('config',config)
     const state = ref(data)
-    // watch(state,(value, oldValue, onCleanup)=>{
-    //   console.log(value)
-    // })
+    watch(state,(value, oldValue, onCleanup)=>{
+      console.log(value)
+    })
     return {
       state
     }
