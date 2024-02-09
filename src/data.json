@@ -32,6 +32,9 @@
       "zIndex": 1,
       "key": "input",
       "props": {
+      },
+      "model": {
+
       }
     }
   ]

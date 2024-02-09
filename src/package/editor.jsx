@@ -18,7 +18,8 @@ import {$dropdown} from "@/package/dropdown";
 import EditorOperator from "@/package/editor-operator";
 export default defineComponent({
     props:{
-        modelValue:{type:Object}
+        modelValue:{type:Object},
+        formData:{type:Object}
     },
     emits:['update:modelValue'],
     setup(props,ctx){
@@ -157,6 +158,7 @@ export default defineComponent({
                                 <EditorBlock
                                     class={block.focus ? 'editor-block-focus':''}
                                     block={block}
+                                    formData={props.formData}
                                     onMousedown={(e)=>{
                                         blockMouseDown(e,block,index)
                                     }}

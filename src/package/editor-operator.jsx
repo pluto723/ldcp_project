@@ -1,6 +1,6 @@
 import {defineComponent, inject, reactive, watch} from 'vue'
 import {ElButton, ElColorPicker, ElForm, ElFormItem, ElInput, ElInputNumber, ElOption, ElSelect} from "element-plus";
-
+import TableEditor from "@/package/table-editor";
 export default defineComponent({
     props:{
         //最后选中的组件
@@ -60,8 +60,16 @@ export default defineComponent({
                                     {propConfig.options.map(opt=>{
                                         return <ElOption label={opt.label} value={opt.value}></ElOption>
                                     })}
-                                </ElSelect>
+                                </ElSelect>,
+                                table:()=><TableEditor propsConfig={propConfig} v-model={state.editData.props[propName]}></TableEditor>
                             }[propConfig.type]()}
+                        </ElFormItem>
+                    }))
+                }
+                if(component && component.model){
+                    content.push(Object.entries(component.model).map(([modelName,label])=>{
+                        return <ElFormItem label={label}>
+                            <ElInput v-model={state.editData.model[modelName]}></ElInput>
                         </ElFormItem>
                     }))
                 }

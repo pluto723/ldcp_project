@@ -2,7 +2,8 @@ import {computed, defineComponent, inject, onMounted, ref, watch} from "vue";
 // 组件用于解析json文件
 export default defineComponent({
     props:{
-        block:{type:Object}
+        block:{type:Object},
+        formData:{type:Object}
     },
     setup(props){
         //计算属性解构props
@@ -31,8 +32,17 @@ export default defineComponent({
             const component = config.componentMap[props.block.key]
             //通过render()函数渲染真实组件
             const RenderComponent = component.render({
-                props:props.block.props
+                props:props.block.props,
+                model:Object.keys(component.model || {}).reduce((prev,modelName)=>{
+                    prev[modelName] = {
+                        //找到键名对应的值
+                        modelValue:props.formData[props.block.model[modelName]],
+                        "onUpdate:modelValue":v=> props.formData[props.block.model[modelName]] = v
+                    }
+                    return prev
+                },{})
             })
+            const {height,width} = component.resize || {}
             return <div class="editor-block" style={blockStyle.value} ref={blockRef}>
                 {RenderComponent}
             </div>

@@ -23,7 +23,8 @@ export function drag(containerRef,data){
                     zIndex:1,
                     key:currentComponent.key,
                     alignCenter:true, //居中标识
-                    props:{}
+                    props:{},
+                    model:{}
                 }
             ]
 
