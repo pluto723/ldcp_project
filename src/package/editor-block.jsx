@@ -1,4 +1,5 @@
 import {computed, defineComponent, inject, onMounted, ref, watch} from "vue";
+import BlockResize from "@/package/block-resize";
 // 组件用于解析json文件
 export default defineComponent({
     props:{
@@ -32,6 +33,8 @@ export default defineComponent({
             const component = config.componentMap[props.block.key]
             //通过render()函数渲染真实组件
             const RenderComponent = component.render({
+                //通过hasResize属性判断组件是否被更改了宽高
+                size:props.block.hasResize ? {width:props.block.width,height:props.block.height,}:{},
                 props:props.block.props,
                 model:Object.keys(component.model || {}).reduce((prev,modelName)=>{
                     prev[modelName] = {
@@ -42,9 +45,14 @@ export default defineComponent({
                     return prev
                 },{})
             })
-            const {height,width} = component.resize || {}
+            const {width,height} = component.resize || {}
             return <div class="editor-block" style={blockStyle.value} ref={blockRef}>
                 {RenderComponent}
+                {/*当选中的组件存在height,width标识符时，生成BlockResize组件*/}
+                {props.block.focus && (width || height) && <BlockResize
+                    block={props.block}
+                    component={component}
+                ></BlockResize>}
             </div>
         }
     }

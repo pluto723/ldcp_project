@@ -1,5 +1,5 @@
 import {computed, defineComponent, inject, ref} from "vue";
-import './editor.scss'
+import '../scss/editor.scss'
 import EditorBlock from './editor-block'
 //物料区拖拽功能的实现
 import {drag} from "@/js/drag";

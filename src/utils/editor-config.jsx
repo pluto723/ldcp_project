@@ -27,7 +27,7 @@ const createTableProp = (label,table)=>({type:"table",label,table})
 registerConfig.register({
     label:'文本',
     preview:()=><ElText>预览文字</ElText>,
-    render:({props})=><ElText style={{color: props.color,fontSize:props.size}}>{props.text || "默认文本"}</ElText>,
+    render:({props})=><ElText style={{color: props.color,fontSize:props.size,}}>{props.text || "默认文本"}</ElText>,
     key:'text',
     props:{
         text:createInputProp('字体内容'),
@@ -46,7 +46,7 @@ registerConfig.register({
         height:true
     },
     preview:()=><ElButton disabled>预览按钮</ElButton>,
-    render:({props})=><ElButton type={props.type} size={props.size}>{props.text || "默认按钮"}</ElButton>,
+    render:({props,size})=><ElButton type={props.type} size={props.size} style={{height:size.height+'px',width:size.width+'px'}}>{props.text || "默认按钮"}</ElButton>,
     key:'button',
     props:{
         text:createInputProp('按钮内容'),
@@ -68,7 +68,7 @@ registerConfig.register({
         width:true//表示可以更改输入框的横向大小
     },
     preview:()=><ElInput disabled>预览输入框</ElInput>,
-    render:({model})=><ElInput {...model.default}>渲染输入框</ElInput>,
+    render:({model,size})=><ElInput {...model.default} style={{width:size.width+'px'}}>渲染输入框</ElInput>,
     key:'input',
     model:{
         default:"绑定字段"
